@@ -1,0 +1,312 @@
+<?php
+include "conn.php";
+session_start();
+
+$id = 0;
+$name = '';
+$email = '';
+$password = '';
+$contact = '';
+
+if(isset($_SESSION['tutor_id'])) {
+
+    $id = $_SESSION['tutor_id'];
+    $sql = "SELECT * FROM tutor_info WHERE tutor_id = $id";
+    $result = mysqli_query($conn, $sql);
+    
+    while($row = mysqli_fetch_assoc($result)) {
+        $name = $row['name'];
+        $email = $row['email'];
+        $password = $row['password'];
+        $contact = $row['contact_num'];
+    }
+}
+
+if(isset($_POST['change_cred'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $contact = $_POST['contact_num'];
+
+    if($name != "") {
+        $change_sql = "UPDATE tutor_info SET name = '$name' WHERE tutor_id = $id";
+        mysqli_query($conn, $change_sql);
+        echo "<script>alert('Name Changed')</script>";
+    }
+    if($email != "") {
+        $change_sql = "UPDATE tutor_info SET email = '$email' WHERE tutor_id = $id";
+        mysqli_query($conn, $change_sql);
+        echo "<script>alert('Email Changed')</script>";
+    }
+    if($contact != "") {
+        $change_sql = "UPDATE tutor_info SET contact_num = '$contact' WHERE tutor_id = $id";
+        mysqli_query($conn, $change_sql);
+        echo "<script>alert('Contact Number Changed')</script>";
+    }
+
+    echo "<script>window.location.reload()</script>";
+
+}
+
+if(isset($_POST['pass_change'])) {
+    $password = $_POST['password'];
+
+    if($password != "") {
+        $pass_sql = "UPDATE tutor_info SET password = '$password' WHERE tutor_id = $id";
+        mysqli_query($conn, $pass_sql);
+        
+        echo "<script>alert('Password Changed')</script>";
+    }
+}
+
+if(isset($_POST['logout'])) {
+    $_SESSION['tutor_id'] = 0;
+    session_destroy();
+
+    echo "<script>alert('Logged Out')</script>";
+    echo "<script>window.location.href='tutor_login.php'</script>";
+
+}
+?>
+
+<html>
+    <head>
+        <title>Tutor Homepage</title>
+        <link rel="stylesheet" href="tutor_home.css" type="text/css"/>
+        <link rel="icon" type="image/x-icon" href="icon.png"/>
+    </head>
+
+    <body>
+        <?php if(!isset($_SESSION['tutor_id']) && !isset($_SESSION['tutor_name'])) {
+            echo "<script>alert('you are not logged in')</script>";
+            echo "<script>window.location.href='user_type.php'</script>";
+        } else {?>
+            <header>
+                <img src="logo1.png" alt="Tutor Hub Logo" class="logo">
+                <div class="head">
+                    <nav>
+                        <ul>
+                            <li><a href="tutor_home.php">Homepage</a></li>
+                            <li><a href="schedule.php">Schedule</a></li>
+                            <li><a href="select_course.php">Apply for a Course</a></li>
+                            <li>
+                                <div class="logout">
+                                    <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                                        <button name="logout"><strong>Log Out</strong></button>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main>
+
+                <div class="profile">
+                    <h1>Profile</h1>
+                    <label for="name">Name:</label>
+                    <?=$name?><br>
+                    <label for="status">Status:</label>
+                    <span>Tutor</span><br>
+                    <label for="email">Email:</label>
+                    <?=$email?><br>
+                    <label for="contact">Contact #:</label>
+                    <?=$contact?><br>
+    
+                    <form action="<?= $_SERVER['PHP_SELF']?>" method="POST">
+                        <select name="choose">
+                            <option></option>
+                            <option value="show">Show Password</option>
+                            <option value="change_pass">Change Password</option>
+                            <option value="change_credentials">Change Credentials</option>
+                        </select>
+                        <button name="pick">Go</button>
+                    </form>
+    
+                    <?php
+                    if(isset($_POST['pick'])) {
+                        $chosen = $_POST['choose'];
+    
+                        if($chosen == "show") {?>
+                            <label for="password">Password:</label>
+                            <?=$password?>
+                    <?php  }
+                        else if($chosen == "change_credentials") {?>
+                            <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
+                                <input type="text" name="name" placeholder="Name"/><br>
+    
+                                <input type="email" name="email" placeholder="Email"/><br>
+    
+                                <input type="text" name="contact_num" placeholder="Contact #" maxlength="11" minlength="11" pattern="\d{11}" required oninput="this.value = this.value.replace(/\D/, '')">
+    
+    
+                                <button name="change_cred">Change Credentials</button>
+                            </form>
+    
+                    <?php }
+                        else if($chosen == "change_pass") {?>
+                            <form action="<?= $_SERVER['PHP_SELF']?>" method="POST">
+                                <input type="password" name="password" placeholder="Password"/>
+                                <button name="pass_change">Change Password</button>
+                            </form>
+                    <?php }
+                    }
+                    ?>
+                </div>
+                
+                <div class="tutored_courses">
+    
+                    <h1>Currently Tutored Students</h1>
+                    <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                        <input type="text" name="search" placeholder="Search" required/>
+                        <button name="searched">Search</button>
+                    </form>
+                    <?php
+                    $search = "";
+                    if(isset($_POST['searched'])) {
+                        $search = $_POST['search'];
+                    }
+                    $search_query = "SELECT 
+                        student_info.name AS student_name, 
+                        course.name AS course_name, 
+                        enrolled.sessions,
+                        enrolled.enroll_id,
+                        payment.billing_id,
+                        payment.amount, 
+                        payment.due_date, 
+                        payment.payment_status
+                        FROM enrolled
+                        INNER JOIN student_info ON enrolled.student_id = student_info.student_id
+                        INNER JOIN course ON enrolled.course_id = course.course_id
+                        INNER JOIN payment ON enrolled.student_id = payment.student_id 
+                        AND enrolled.course_id = payment.course_id 
+                        AND enrolled.student_id = payment.student_id WHERE enrolled.tutor_id = $id AND student_info.name LIKE '%$search%'";
+                    $search_result = mysqli_query($conn, $search_query);
+                    
+                    $query = "SELECT 
+                            student_info.name AS student_name, 
+                            course.name AS course_name, 
+                            enrolled.sessions,
+                            enrolled.enroll_id,
+                            enrolled.student_id,
+                            enrolled.tutor_id,
+                            enrolled.course_id,
+                            payment.billing_id,
+                            payment.amount, 
+                            payment.due_date, 
+                            payment.payment_status
+                            FROM enrolled
+                            INNER JOIN student_info ON enrolled.student_id = student_info.student_id
+                            INNER JOIN course ON enrolled.course_id = course.course_id
+                            INNER JOIN payment ON enrolled.student_id = payment.student_id 
+                            AND enrolled.course_id = payment.course_id 
+                            AND enrolled.student_id = payment.student_id WHERE enrolled.tutor_id = $id;";
+                    $query_result = mysqli_query($conn, $query);
+
+                    
+                    if(isset($_POST['searched'])) {
+                        $set_result = $search_result;
+                    }
+                    else {
+                        $set_result = $query_result;
+                    }
+
+                    while($row=mysqli_fetch_assoc($set_result)) {
+                        $student_name = $row['student_name'];
+                        $course_name = $row['course_name'];
+                        $sessions = $row['sessions'];
+                        $enroll_id = $row['enroll_id'];
+                        $billing_id = $row['billing_id'];
+                        $amount = $row['amount'];
+                        $due_date = $row['due_date'];
+                        $payment_status = $row['payment_status'];
+                        $tutor_id = $row['tutor_id'];
+                        $student_id = $row['student_id'];
+                        $course_id = $row['course_id'];
+    
+                        echo "<table>";
+                        echo "<tr>";
+                        echo "<th>Student Name</th>";
+                        echo "<th>Course</th>";
+                        echo "<th>Sessions</th>";
+                        echo "<th>Payment Amount</th>";
+                        echo "<th>Payment Due Date</th>";
+                        echo "<th>Payment Status</th>";
+                        echo "<th></th>";
+                        echo "<th></th>";
+                        echo "<tr>";
+                        echo "<td>$student_name</td>";
+                        echo "<td>$course_name</td>";
+                        echo "<td>$sessions</td>";
+                        echo "<td>$amount</td>";?>
+                        <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                            <td>
+                                <?=$due_date?><br>
+                                <input type="hidden" name="id_billing" value="<?=$billing_id?>"/>
+                                <input type="date" name="due_date"/>
+                            </td>
+                            <td>
+                                <?=$payment_status?><br>
+                                <select name="status">
+                                    <option></option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Unpaid">Unpaid</option>
+                                </select>    
+                            </td>
+                            <td>
+                                <button name="save" class="save">Save</button>
+                            </td>
+                        </form>
+                        <td>
+                            <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                                <input type="hidden" name="id_enroll" value="<?=$enroll_id?>"/>
+                                <input type="hidden" name="id_billing" value="<?=$billing_id?>"/>
+                                <button name="remove" class="remove">Remove</button>
+                            </form>
+                        <?php 
+                        if(isset($_POST['remove'])) {
+                            $id_enroll = $_POST['id_enroll'];
+                            $id_billing = $_POST['id_billing'];
+                            if(isset($id_enroll) && isset($id_billing)) {
+                                $query1 = "DELETE FROM enrolled WHERE enroll_id = $id_enroll";
+                                $query2 = "DELETE FROM payment WHERE billing_id = $id_billing";
+                                $query3 = "DELETE FROM schedule WHERE  tutor_id = $tutor_id AND student_id = $student_id AND course_id = $course_id";
+                                $query_result1 = mysqli_query($conn, $query1);
+                                $query_result2 = mysqli_query($conn, $query2);
+                                $query_result3 = mysqli_query($conn, $query3);?>
+
+                                
+                                <?php 
+                                header("Location: " . $_SERVER['PHP_SELF']);
+                                exit();
+                                
+                            }
+                        }
+                        if(isset($_POST['save'])) {
+                            $id_billing = $_POST['id_billing'];
+                            $status = $_POST['status'];
+                            $due = $_POST['due_date'];
+                            if(isset($status) && $status != "") {
+                                $query = "UPDATE payment SET payment_status = '$status' WHERE billing_id = $id_billing";
+                                mysqli_query($conn, $query);
+                            }   
+                            if(isset($due) && $due != "") {
+                                $query2 = "UPDATE payment SET due_date = '$due' WHERE billing_id = $id_billing";
+                                mysqli_query($conn, $query2);
+                            }
+                            
+                            echo "<script>alert('Changes Saved'); window.location.href = '" . $SERVER['PHP_SELF'] . "';</script>";
+                            header("Location: " . $_SERVER['PHP_SELF']);
+                        }
+                        ?>
+                        </td>
+                <?php   echo "</tr>";
+                        echo "</tr>";
+                        echo "</table>";
+                    }
+                    ?>
+                </div>
+            </main>
+            
+        <?php } ?>
+    </body>
+</html>

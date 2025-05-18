@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e5e7ec;
+    color: black;
+}
+
+header {
+    background-image: linear-gradient( 86.3deg,  rgb(1, 199, 133) 3.6%, rgb(8, 68, 46) 87.6% );
+    color: #fff;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+
+header .head {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 45px;
+    margin: 0;
+    padding: 0;
+  }
+
+header nav ul li {
+    display: inline;
+}
+  
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(159, 160, 163);
+}
+
+main {
+    padding: 20px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 2fr;
+    grid-template-areas: 
+      "calendar details";
+  }
+
+.logout button, .profile button {
+    background-color: #0d783b;
+    color: #f4f7fc;
+    border-color: #075d2c;
+    font-size: 17px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+}
+
+.logout button:hover, .profile button:hover {
+    background-color: #0a5b2d;
+    cursor: pointer;
+}
+
+.profile input{
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.profile select, .profile input{
+    padding: 5px;
+    font-size: 15px;
+    width: 40%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.logo {
+    max-width: 20%;
+    height: auto;
+    margin: 1px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid black;
+    font-family: Arial, sans-serif;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ddd;
+}

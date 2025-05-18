@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e5e7ec;
+    color: black;
+}
+
+header {
+    background-image: linear-gradient( 86.3deg,  rgb(1, 199, 133) 3.6%, rgb(8, 68, 46) 87.6% );
+    color: #fff;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+
+header .head {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 45px;
+    margin: 0;
+    padding: 0;
+  }
+
+header nav ul li {
+    display: inline;
+}
+  
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(159, 160, 163);
+}
+
+main {
+    padding: 20px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 2fr;
+    grid-template-areas: 
+      "calendar details";
+  }
+
+.logo {
+    max-width: 20%;
+    height: auto;
+    margin: 1px;
+}
+
+.select_course button {
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: white;
+    background-color: #0d783b;
+    border: 1px solid #075d2c;
+    padding: 10px;
+    cursor: pointer;
+    width: 200px;
+}
+
+.select_course button:hover {
+    background-color: #0a5b2d;
+    cursor: pointer;
+}
+.select_course input{
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.select_course select, .select_course input{
+    padding: 10px;
+    font-size: 15px;
+    width: 30%;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
