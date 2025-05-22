@@ -145,7 +145,7 @@ if(isset($_POST['logout'])) {
                     <?php }
                         else if($chosen == "change_pass") {?>
                             <form action="<?= $_SERVER['PHP_SELF']?>" method="POST">
-                                <input type="password" name="password" placeholder="Password"/>
+                                <input type="password" name="password" placeholder="Password" maxlength="16" minlength="8"/>
                                 <button name="pass_change">Change Password</button>
                             </form>
                     <?php }
@@ -215,14 +215,23 @@ if(isset($_POST['logout'])) {
                             $course_name = $row['course_name'];
                             $sessions = $row['sessions'];
                             $amount = $row['amount'];
-                            $due_date = $row['due_date'];
-                            $payment_status = $row['payment_status'];?>
+                            $due_date = (String) $row['due_date'];
+                            $payment_status = $row['payment_status'];
+                            $due = "";
+                            if($due_date == "0000-00-00") {
+                                $due = "Not Set";
+                            }
+                            else {
+                                $due = $due_date;
+                            }
+                            ?>
+
                         <tr>
                             <td><?=$tutor_name?></td>
                             <td><?=$course_name?></td>
                             <td><?=$sessions?></td>
                             <td><?=$amount?></td>
-                            <td><?=$due_date?></td>
+                            <td><?=$due?></td>
                             <td><?=$payment_status?></td>
                         </tr>
                         <?php } ?>

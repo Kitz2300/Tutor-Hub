@@ -113,7 +113,7 @@ if(isset($_POST['remove'])) {
                         <li><a href="tutor_home.php">Homepage</a></li>
                         <li><a href="schedule.php">Schedule</a></li>
                         <li><a href="record.php">Records</a></li>
-                        <li><a href="select_course.php">Apply for a Course</a></li>
+                        <li><a href="select_course.php">Apply to Teach</a></li>
                     </ul>
                 </nav>
             </div>

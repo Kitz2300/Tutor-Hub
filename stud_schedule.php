@@ -81,12 +81,16 @@ if(isset($_SESSION['student_id'])) {
                 $course_id = $row['course_id'];
                 $start_time = $row['start_time'];
                 $end_time = $row['end_time'];
-                $day = $row['day'];?>
+                $day = $row['day'];
+                $start = $start_time == "00:00:00" ? "Not Set" : $start_time;
+                $end = $end_time == "00:00:00" ? "Not Set" : $end_time;
+
+                ?>
                         <tr>
                             <td><?= $tutor_name ?></td>
                             <td><?= $course_name ?></td>
-                            <td><?= $start_time ?></td>
-                            <td><?= $end_time ?></td>
+                            <td><?= $start ?></td>
+                            <td><?= $end ?></td>
                             <td>
                             <?php
                                 if($day == "") {?>

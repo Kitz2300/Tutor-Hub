@@ -69,7 +69,7 @@ if(isset($_POST['save'])) {
                         <li><a href="tutor_home.php">Homepage</a></li>
                         <li><a href="schedule.php">Schedule</a></li>
                         <li><a href="record.php">Records</a></li>
-                        <li><a href="select_course.php">Apply for a Course</a></li>
+                        <li><a href="select_course.php">Apply to Teach</a></li>
                     </ul>
                 </nav>
             </div>
@@ -108,19 +108,22 @@ if(isset($_POST['save'])) {
                 $course_id = $row['course_id'];
                 $start_time = $row['start_time'];
                 $end_time = $row['end_time'];
-                $day = $row['day'];?>
+                $day = $row['day'];
+                $start = $start_time == "00:00:00" ? "Not Set" : $start_time;
+                $end = $end_time == "00:00:00" ? "Not Set" : $end_time;
+                ?>
                         <tr>
                             <td><?= $student_name ?></td>
                             <td><?= $course_name ?></td>
                             <td>
-                            <?= $start_time ?><br>
+                            <?= $start ?><br>
                             <form action="<?= $_SERVER['PHP_SELF']?>" method="POST">
                                 <input type="number" name="start_hours" min="0" max="23" placeholder="hours"/>
                                 <strong>:</strong> 
                                 <input type="number" name="start_min" min="0" max="59" placeholder="min"/><br>
                             </td>
                             <td>
-                            <?= $end_time ?><br>
+                            <?= $end ?><br>
                                 <input type="number" name="end_hours" min="0" max="23" placeholder="hours"/>
                                 <strong>:</strong> 
                                 <input type="number" name="end_min" min="0" max="59" placeholder="min"/><br>

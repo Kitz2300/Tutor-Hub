@@ -42,7 +42,7 @@ if(isset($_SESSION['tutor_id'])) {
                         <li><a href="tutor_home.php">Homepage</a></li>
                         <li><a href="schedule.php">Schedule</a></li>
                         <li><a href="record.php">Records</a></li>
-                        <li><a href="select_course.php">Apply for a Course</a></li>
+                        <li><a href="select_course.php">Apply to Teach</a></li>
                     </ul>
                 </nav>
             </div>
@@ -50,7 +50,7 @@ if(isset($_SESSION['tutor_id'])) {
         <main>
             <div class="select_course">
             <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
-                <h2>Apply for a Course:</h2>
+                <h2>Apply to Teach:</h2>
                 <select name="courses" required>
                     <option>Select a Course</option>
                     <?php 

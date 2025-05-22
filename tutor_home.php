@@ -119,7 +119,7 @@ if (isset($_POST['save'])) {
                 <li><a href="tutor_home.php">Homepage</a></li>
                 <li><a href="schedule.php">Schedule</a></li>
                 <li><a href="record.php">Records</a></li>
-                <li><a href="select_course.php">Apply for a Course</a></li>
+                <li><a href="select_course.php">Apply to Teach</a></li>
                 <li>
                     <div class="logout">
                         <form action="<?= $_SERVER['PHP_SELF'] ?>" method="POST">
@@ -257,17 +257,25 @@ if (isset($_POST['save'])) {
                         $payment_status = $row['payment_status'];
                         $tutor_id = $row['tutor_id'];
                         $student_id = $row['student_id'];
-                        $course_id = $row['course_id'];?>
+                        $course_id = $row['course_id'];
+                        $due = "";
+                        if($due_date == "0000-00-00") {
+                            $due = "Not Set";
+                        }
+                        else {
+                            $due = $due_date;
+                        }
+                        ?>
                 <tr>
                     <td><?=$student_name?></td>
                     <td><?=$course_name?></td>
                     <td><?=$sessions?></td>
                     <td><?=$amount?></td>
-                    <form action='" . $_SERVER['PHP_SELF'] . "' method='POST'>
+                    <form action="<?=$_SERVER['PHP_SELF']?>" method='POST'>
                         <td>
-                            <?=$due_date?><br>
+                            <?=$due?><br>
                             <!-- edit due date -->
-                            <input type='hidden' name='id_billing' value='$billing_id'/>
+                            <input type='hidden' name='id_billing' value='<?=$billing_id?>'/>
                             <input type='date' name='due_date'/>
                         </td>
                         <td>
@@ -282,7 +290,7 @@ if (isset($_POST['save'])) {
                         <!-- Save button -->
                         <td><button name='save' class='save'>Save</button></td>
                     </form>
-                    <form action='" . $_SERVER['PHP_SELF'] . "' method='POST'>
+                    <form action="<?= $_SERVER['PHP_SELF']?>" method='POST'>
                         <td>
                             <!-- remove button -->
                             <div class='remove'>
